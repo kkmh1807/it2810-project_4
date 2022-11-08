@@ -5,7 +5,7 @@ export enum QueryMode {
   ACTOR = 'ACTOR'
 }
 
-export const SearchModeValues: Record<QueryMode, string> = {
+export const QueryModeValues: Record<QueryMode, string> = {
   ALL: 'All',
   TITLE: 'Title',
   GENRE: 'Genres',

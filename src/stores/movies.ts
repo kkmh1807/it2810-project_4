@@ -1,5 +1,5 @@
 import { ref, computed } from 'vue';
-import { defineStore } from 'pinia';
+import { defineStore, storeToRefs } from 'pinia';
 import { usePaginationStore } from './pagination';
 import useGraphqlData from '@/composables/useGraphqlData';
 import type { MovieResponse } from '@/types/pagination';
@@ -32,7 +32,7 @@ pageInfo {
  */
 export const useMoviesStore = defineStore('movies', () => {
   const { currentPage, order } = usePaginationStore();
-  const { queryKey } = useQueryStore();
+  const { queryKey } = storeToRefs(useQueryStore());
 
   const movieResponse = ref<MovieResponse>();
 
@@ -43,7 +43,7 @@ export const useMoviesStore = defineStore('movies', () => {
   // Fetch functions to database.
   async function getMoviesByAll() {
     const query = `query {
-      getMoviesByAll (query: "${queryKey}", currentPage: ${currentPage}, order: ${order}) {
+      getMoviesByAll (query: "${queryKey.value}", currentPage: ${currentPage}, order: ${order}) {
         ${queryData}
       }
     }`;
@@ -54,7 +54,7 @@ export const useMoviesStore = defineStore('movies', () => {
 
   async function getMoviesByGenre() {
     const searchQuery = `query {
-      getMoviesByGenre (genre: "${queryKey}", currentPage: ${currentPage}, order: ${order}) {
+      getMoviesByGenre (genre: "${queryKey.value}", currentPage: ${currentPage}, order: ${order}) {
         ${queryData}
       }
     }`;
@@ -65,7 +65,7 @@ export const useMoviesStore = defineStore('movies', () => {
 
   async function getMoviesByTitle() {
     const searchQuery = `query {
-      getMoviesByTitle (title: "${queryKey}", currentPage: ${currentPage}, order: ${order}) {
+      getMoviesByTitle (title: "${queryKey.value}", currentPage: ${currentPage}, order: ${order}) {
         ${queryData}
       }
     }`;
@@ -75,7 +75,7 @@ export const useMoviesStore = defineStore('movies', () => {
 
   async function getMoviesByActor() {
     const searchQuery = `query {
-      getMoviesByActors (actor: "${queryKey}", currentPage: ${currentPage}, order: ${order}) {
+      getMoviesByActors (actor: "${queryKey.value}", currentPage: ${currentPage}, order: ${order}) {
         ${queryData}
       }
     }`;
