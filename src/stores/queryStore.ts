@@ -5,7 +5,7 @@ import { QueryMode } from '@/types/query';
 /**
  * Setup for using query store.
  */
-export const useQueryState = defineStore('queryState', () => {
+export const useQueryStore = defineStore('query', () => {
   const queryKey = ref('');
   const queryMode = ref(QueryMode.ALL);
 

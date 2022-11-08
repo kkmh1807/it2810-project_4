@@ -3,12 +3,36 @@ import { defineStore } from 'pinia';
 import { usePaginationStore } from './pagination';
 import useGraphqlData from '@/composables/useGraphqlData';
 import type { MovieResponse } from '@/types/pagination';
+import { useQueryStore } from './queryStore';
+
+/**
+ * Query data is the same, so this is moved out in a constant.
+ */
+const queryData = `data {
+  _id,
+  Series_Title,
+  Poster_Link,
+  Genre,
+  Star1,
+  Star2,
+  Star3,
+  Star4,
+  IMDB_Rating, 
+  Overview,
+  Watched
+}
+pageInfo {
+  currentPage
+  totalPages
+  pageSize
+}`;
 
 /**
  * Setup for using movies store.
  */
 export const useMoviesStore = defineStore('movies', () => {
   const { currentPage, order } = usePaginationStore();
+  const { queryKey } = useQueryStore();
 
   const movieResponse = ref<MovieResponse>();
 
@@ -16,33 +40,57 @@ export const useMoviesStore = defineStore('movies', () => {
   const movies = computed(() => movieResponse.value?.data);
   const totalPages = computed(() => movieResponse.value?.pageInfo.totalPages);
 
-  async function searchAllMovies() {
+  // Fetch functions to database.
+  async function getMoviesByAll() {
     const query = `query {
-    movies(currentPage:${currentPage}, order: ${order}) {
-      data {
-        _id,
-        Series_Title,
-        Poster_Link,
-        Genre,
-        Star1,
-        Star2,
-        Star3,
-        Star4,
-        IMDB_Rating, 
-        Overview,
-        Watched
+      getMoviesByAll (query: "${queryKey}", currentPage: ${currentPage}, order: ${order}) {
+        ${queryData}
       }
-      pageInfo {
-        currentPage
-        totalPages
-        pageSize
-      }
-    }
-  }`;
+    }`;
 
-    const response = await useGraphqlData<{ movies: MovieResponse }>(query);
-    movieResponse.value = response.movies;
+    const response = await useGraphqlData<{ getMoviesByAll: MovieResponse }>(query);
+    movieResponse.value = response.getMoviesByAll;
   }
 
-  return { movieResponse, movies, totalPages, searchAllMovies };
+  async function getMoviesByGenre() {
+    const searchQuery = `query {
+      getMoviesByGenre (genre: "${queryKey}", currentPage: ${currentPage}, order: ${order}) {
+        ${queryData}
+      }
+    }`;
+
+    const response = await useGraphqlData<{ getMoviesByGenre: MovieResponse }>(searchQuery);
+    movieResponse.value = response.getMoviesByGenre;
+  }
+
+  async function getMoviesByTitle() {
+    const searchQuery = `query {
+      getMoviesByTitle (title: "${queryKey}", currentPage: ${currentPage}, order: ${order}) {
+        ${queryData}
+      }
+    }`;
+    const response = await useGraphqlData<{ getMoviesByTitle: MovieResponse }>(searchQuery);
+    movieResponse.value = response.getMoviesByTitle;
+  }
+
+  async function getMoviesByActor() {
+    const searchQuery = `query {
+      getMoviesByActors (actor: "${queryKey}", currentPage: ${currentPage}, order: ${order}) {
+        ${queryData}
+      }
+    }`;
+
+    const response = await useGraphqlData<{ getMoviesByActors: MovieResponse }>(searchQuery);
+    movieResponse.value = response.getMoviesByActors;
+  }
+
+  return {
+    movieResponse,
+    movies,
+    totalPages,
+    getMoviesByAll,
+    getMoviesByTitle,
+    getMoviesByGenre,
+    getMoviesByActor
+  };
 });
