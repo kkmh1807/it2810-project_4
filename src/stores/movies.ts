@@ -1,4 +1,4 @@
-import { ref, computed } from 'vue';
+import { ref, computed, reactive } from 'vue';
 import { defineStore, storeToRefs } from 'pinia';
 import { usePaginationStore } from './pagination';
 import useGraphqlData from '@/composables/useGraphqlData';
@@ -34,11 +34,12 @@ export const useMoviesStore = defineStore('movies', () => {
   const { currentPage, order } = usePaginationStore();
   const { queryKey } = storeToRefs(useQueryStore());
 
-  const movieResponse = ref<MovieResponse>();
+  // const movieResponse = ref<MovieResponse>({ data: [], pageInfo: { currentPage: 1, pageSize: 1, totalPages: 0 } });
+  const state = reactive<{ response?: MovieResponse }>({ response: undefined });
 
   // Computed properties gets just a part of the state - removes redundant data and prevent multiple states.
-  const movies = computed(() => movieResponse.value?.data);
-  const totalPages = computed(() => movieResponse.value?.pageInfo.totalPages);
+  const movies = computed(() => state.response?.data || []);
+  const totalPages = computed(() => state.response?.pageInfo.totalPages || 0);
 
   // Fetch functions to database.
   async function getMoviesByAll() {
@@ -49,7 +50,7 @@ export const useMoviesStore = defineStore('movies', () => {
     }`;
 
     const response = await useGraphqlData<{ getMoviesByAll: MovieResponse }>(query);
-    movieResponse.value = response.getMoviesByAll;
+    state.response = response.getMoviesByAll;
   }
 
   async function getMoviesByGenre() {
@@ -60,7 +61,7 @@ export const useMoviesStore = defineStore('movies', () => {
     }`;
 
     const response = await useGraphqlData<{ getMoviesByGenre: MovieResponse }>(searchQuery);
-    movieResponse.value = response.getMoviesByGenre;
+    state.response = response.getMoviesByGenre;
   }
 
   async function getMoviesByTitle() {
@@ -70,7 +71,7 @@ export const useMoviesStore = defineStore('movies', () => {
       }
     }`;
     const response = await useGraphqlData<{ getMoviesByTitle: MovieResponse }>(searchQuery);
-    movieResponse.value = response.getMoviesByTitle;
+    state.response = response.getMoviesByTitle;
   }
 
   async function getMoviesByActor() {
@@ -81,11 +82,11 @@ export const useMoviesStore = defineStore('movies', () => {
     }`;
 
     const response = await useGraphqlData<{ getMoviesByActors: MovieResponse }>(searchQuery);
-    movieResponse.value = response.getMoviesByActors;
+    state.response = response.getMoviesByActors;
   }
 
   return {
-    movieResponse,
+    state,
     movies,
     totalPages,
     getMoviesByAll,
