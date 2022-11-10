@@ -6,6 +6,7 @@ defineProps<{
   watched: boolean;
   movieId?: string;
 }>();
+// TODO: Handle logic when movieCard is merged.
 </script>
 
 <template>
