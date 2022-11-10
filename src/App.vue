@@ -3,6 +3,7 @@ import { RouterLink, RouterView } from 'vue-router';
 import HelloWorld from './components/HelloWorld.vue';
 import SearchBar from './components/SearchBar.vue';
 import WatchEye from './components/WatchEye.vue';
+import PaginationBar from './components/PaginationBar.vue';
 </script>
 
 <template>
