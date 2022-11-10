@@ -7,19 +7,11 @@ import DoubleArrowRight from './icons/DoubleArrowRight.vue';
 
 <template>
   <div class="pagination-container">
-    <button data-cy="first-page" class="pagination-button">
-      <DoubleArrowLeft class="pagination-arrow" />
-    </button>
-    <button data-cy="prev-page" class="pagination-button">
-      <ChevronLeft class="pagination-arrow" />
-    </button>
+    <DoubleArrowLeft class="pagination-button" />
+    <ChevronLeft class="pagination-button" />
     <div data-cy="current-page" class="pagination-text">1 of 50</div>
-    <button data-cy="next-page" class="pagination-button">
-      <ChevronRight class="pagination-arrow" />
-    </button>
-    <button data-cy="last-page" class="pagination-button">
-      <DoubleArrowRight class="pagination-arrow" />
-    </button>
+    <ChevronRight class="pagination-button" />
+    <DoubleArrowRight class="pagination-button" />
   </div>
 </template>
 
@@ -32,8 +24,8 @@ import DoubleArrowRight from './icons/DoubleArrowRight.vue';
   margin-bottom: 1rem;
 }
 .pagination-button {
-  width: 40px;
-  height: 40px;
+  background-color: white;
+  width: 50px;
   padding: 0;
   border-radius: 15px;
   border: none;
