@@ -25,17 +25,14 @@ import DoubleArrowRight from './icons/DoubleArrowRight.vue';
 }
 .pagination-button {
   background-color: white;
-  width: 50px;
   padding: 0;
+  width: 50px;
+  height: 50px;
   border-radius: 15px;
   border: none;
   cursor: pointer;
 }
 
-.pagination-arrow {
-  width: 40px;
-  height: 40px;
-}
 .pagination-text {
   font-size: 1.2rem;
   font-weight: bold;
