@@ -12,7 +12,7 @@ import WatchEye from './components/WatchEye.vue';
     <SearchBar />
 
     <div class="box">
-      <WatchEye v-bind:watched="false" />
+      <WatchEye :watched="false" />
     </div>
     <div class="wrapper">
       <HelloWorld msg="You did it!" />
