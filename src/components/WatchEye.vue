@@ -11,7 +11,7 @@ defineProps<{
 
 <template>
   <EyeUnwatched class="eye" v-if="!watched" tabIndex="{0}" />
-  <EyeWatched class="eye" v-if="watched" tabIndex="{0}" />
+  <EyeWatched class="eye" v-else tabIndex="{0}" />
 </template>
 
 <style scoped>
