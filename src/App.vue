@@ -2,6 +2,7 @@
 import { RouterLink, RouterView } from 'vue-router';
 import HelloWorld from './components/HelloWorld.vue';
 import SearchBar from './components/SearchBar.vue';
+import WatchEye from './components/WatchEye.vue';
 </script>
 
 <template>
@@ -10,6 +11,9 @@ import SearchBar from './components/SearchBar.vue';
 
     <SearchBar />
 
+    <div class="box">
+      <WatchEye :watched="false" />
+    </div>
     <div class="wrapper">
       <HelloWorld msg="You did it!" />
 
@@ -27,6 +31,10 @@ import SearchBar from './components/SearchBar.vue';
 header {
   line-height: 1.5;
   max-height: 100vh;
+}
+
+.box {
+  background-color: white;
 }
 
 .logo {
