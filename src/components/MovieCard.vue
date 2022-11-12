@@ -12,14 +12,14 @@ const showDetails = ref(false);
 </script>
 
 <template>
-  <div className="movie-card" @click="showDetails = !showDetails" tabindex="0" v-on:keyup.enter="showDetails = !showDetails">
+  <div className="movie-card" @click="showDetails = !showDetails" tabindex="0" @keyup.enter="showDetails = !showDetails">
     <img id="poster" v-bind:src="movie.Poster_Link" alt="" />
     <div id="title">{{ movie.Series_Title }}</div>
     <div id="genre">{{ movie.Genre }}</div>
     <div id="rating">{{ movie.IMDB_Rating }}</div>
     <div id="dropdown-arrow">
       <ExpandLess v-if="showDetails" />
-      <ExpandMore v-if="!showDetails" />
+      <ExpandMore v-else />
     </div>
   </div>
   <div v-if="showDetails" className="movie-card-details">
