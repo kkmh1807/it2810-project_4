@@ -3,17 +3,13 @@ import { RouterLink, RouterView } from 'vue-router';
 import HelloWorld from './components/HelloWorld.vue';
 import SearchBar from './components/SearchBar.vue';
 import WatchEye from './components/WatchEye.vue';
+import PaginationBar from './components/PaginationBar.vue';
 </script>
 
 <template>
   <header>
     <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
-
-    <SearchBar />
-
-    <div class="box">
-      <WatchEye :watched="false" />
-    </div>
+    <PaginationBar />
     <div class="wrapper">
       <HelloWorld msg="You did it!" />
 
