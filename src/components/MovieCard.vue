@@ -40,7 +40,7 @@ const showDetails = ref(false);
         <span>{{ movie.Star3 }}</span>
         <span>{{ movie.Star4 }}</span>
       </div>
-      <WatchEye class="eye" :watched="movie.Watched" />
+      <WatchEye class="eye" :watched="movie.Watched" :movieId="movie._id" />
     </div>
   </div>
 </template>

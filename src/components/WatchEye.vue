@@ -1,15 +1,20 @@
 <script setup lang="ts">
 import EyeUnwatched from './icons/EyeNofill.vue';
 import EyeWatched from './icons/EyeFill.vue';
+import useGraphqlData from '@/composables/useGraphqlData';
+import { useMoviesStore } from '@/stores/movies';
 
-defineProps<{
+const props = defineProps<{
   watched: boolean;
-  movieId?: string;
+  movieId: string;
 }>();
 
-// TODO: Handle logic when movieCard is merged.
-function setWatched() {
-  console.log('toggle watched');
+async function setWatched() {
+  const mutationQuery = `mutation { toggleWatched(id: "${props.movieId}", watched: ${!props.watched}) { Watched }}`;
+  await useGraphqlData<{}>(mutationQuery);
+
+  const { searchMovies } = useMoviesStore();
+  searchMovies();
 }
 </script>
 
