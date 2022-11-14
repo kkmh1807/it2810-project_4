@@ -1,15 +1,18 @@
 <script setup lang="ts">
+import { useMoviesStore } from '@/stores/movies';
 import ChevronLeft from './icons/ChevronLeft.vue';
 import ChevronRight from './icons/ChevronRight.vue';
 import DoubleArrowLeft from './icons/DoubleArrowLeft.vue';
 import DoubleArrowRight from './icons/DoubleArrowRight.vue';
+
+const { totalPages } = useMoviesStore();
 </script>
 
 <template>
   <div class="pagination-container">
     <DoubleArrowLeft class="pagination-button" />
     <ChevronLeft class="pagination-button" />
-    <div data-cy="current-page" class="pagination-text">1 of 50</div>
+    <div data-cy="current-page" class="pagination-text">1 of {{ totalPages }}</div>
     <ChevronRight class="pagination-button" />
     <DoubleArrowRight class="pagination-button" />
   </div>
