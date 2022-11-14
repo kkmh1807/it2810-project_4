@@ -3,6 +3,7 @@ import type { Movie } from '@/types/movie';
 import { ref } from 'vue';
 import ExpandMore from './icons/ExpandMore.vue';
 import ExpandLess from './icons/ExpandLess.vue';
+import WatchEye from './WatchEye.vue';
 
 defineProps<{
   movie: Movie;
@@ -12,27 +13,34 @@ const showDetails = ref(false);
 </script>
 
 <template>
-  <div className="movie-card" @click="showDetails = !showDetails" tabindex="0" @keyup.enter="showDetails = !showDetails">
-    <img id="poster" v-bind:src="movie.Poster_Link" alt="" />
-    <div id="title">{{ movie.Series_Title }}</div>
-    <div id="genre">{{ movie.Genre }}</div>
-    <div id="rating">{{ movie.IMDB_Rating }}</div>
-    <div id="dropdown-arrow">
+  <div
+    class="movie-card"
+    tabindex="0"
+    @click="showDetails = !showDetails"
+    @keydown.space.prevent="showDetails = !showDetails"
+    @keydown.enter="showDetails = !showDetails"
+  >
+    <img class="poster" :src="movie.Poster_Link" alt="Movie Poster" @error.prevent="(e: any) => e.target && (e.target.src = '/logo.svg')" />
+    <div class="title">{{ movie.Series_Title }}</div>
+    <div class="genre">Genre: {{ movie.Genre }}</div>
+    <div class="rating">Rating: {{ movie.IMDB_Rating }}</div>
+    <div class="dropdown-arrow">
       <ExpandLess v-if="showDetails" />
       <ExpandMore v-else />
     </div>
-  </div>
-  <div v-if="showDetails" className="movie-card-details">
-    <div>
-      <h3>Overview</h3>
-      {{ movie.Overview }}
-    </div>
-    <div>
-      <h3>Starring</h3>
-      {{ movie.Star1 }} <br />
-      {{ movie.Star2 }} <br />
-      {{ movie.Star3 }} <br />
-      {{ movie.Star4 }}
+    <div :class="{ open: showDetails }" class="movie-card-details">
+      <div>
+        <h3>Overview</h3>
+        {{ movie.Overview }}
+      </div>
+      <div class="stars">
+        <h3>Starring</h3>
+        <span>{{ movie.Star1 }}</span>
+        <span>{{ movie.Star2 }}</span>
+        <span>{{ movie.Star3 }}</span>
+        <span>{{ movie.Star4 }}</span>
+      </div>
+      <WatchEye class="eye" :watched="movie.Watched" />
     </div>
   </div>
 </template>
@@ -41,43 +49,49 @@ const showDetails = ref(false);
 .movie-card {
   background-color: #fcf7f7;
   color: black;
-  width: 90vw;
+  width: 100%;
   display: grid;
   grid-template-areas:
     'poster title title title details'
     'poster genre star rating details';
-  grid-template-rows: 1fr 1fr;
-  grid-template-columns: auto 1.5fr 1.5fr 0.5fr 0.2fr;
+  grid-template-columns: auto 1.5fr 1.5fr 0.5fr 85px;
   align-items: center;
-  margin-bottom: 2%;
   cursor: pointer;
 }
-.movie-card:hover {
-  text-decoration: underline;
+
+h3 {
+  font-weight: bold;
 }
-#poster {
+
+.poster {
   grid-area: poster;
   width: 70px;
-  height: 102px;
+  aspect-ratio: 70 / 102;
 }
-#title {
+
+.title {
   grid-area: title;
   font-size: 1.2rem;
   margin-left: 0.5rem;
 }
-#genre {
+
+.movie-card:focus .title,
+.movie-card:hover .title {
+  text-decoration: underline;
+}
+
+.genre {
   grid-area: genre;
   margin-left: 0.5rem;
 }
-#star {
+.star {
   grid-area: star;
 }
-#rating {
+.rating {
   grid-area: rating;
 }
-#dropdown-arrow {
+.dropdown-arrow {
   grid-area: details;
-  height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -86,34 +100,45 @@ const showDetails = ref(false);
 }
 
 .movie-card-details {
-  display: flex;
+  grid-column: 1 / 6;
+  display: grid;
+  grid-template-columns: 1fr 0.6fr calc(85px);
   color: black;
-  width: 90vw;
-  margin-bottom: 2%;
-  margin-top: -2%;
-  padding: 1%;
-  background-color: #fcf7f7;
-  align-items: center;
-  justify-content: space-between;
+  gap: 1rem;
+
+  padding-left: 0.5rem;
+  opacity: 0;
+  max-height: 0;
+  padding-top: 0;
+  padding-bottom: 0;
+  transition: all 200ms ease-in-out;
+  transform-origin: top;
+  visibility: hidden;
+  transform: scaleY(0);
+}
+
+.movie-card-details.open {
+  opacity: 1;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  max-height: 500px;
+  visibility: visible;
+  transform: scaleY(1);
   border-top: 1px solid #8b8b8b;
 }
 
-#info {
-  width: 70%;
+.stars {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  place-content: start;
+  column-gap: 1rem;
 }
 
-#stars {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-wrap: wrap;
+.stars h3 {
+  grid-column: 1 / 3;
 }
-#stars > p {
-  width: 100%;
-  text-align: center;
-}
-#stars > h3 {
-  width: 100%;
-  text-align: center;
+
+.eye {
+  place-self: center;
 }
 </style>

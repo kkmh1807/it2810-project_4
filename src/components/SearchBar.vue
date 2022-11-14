@@ -1,13 +1,14 @@
 <script setup lang="ts">
 import useGraphqlData from '@/composables/useGraphqlData';
 import { useMoviesStore } from '@/stores/movies';
-import { useQueryStore } from '@/stores/queryStore';
+import { useQueryStore } from '@/stores/query';
 import { QueryMode, QueryModeValues } from '@/types/query';
 import { storeToRefs } from 'pinia';
 import { onBeforeMount, ref } from 'vue';
+import SearchIcon from './icons/SearchIcon.vue';
 
 const { queryMode, queryKey } = storeToRefs(useQueryStore());
-const { getMoviesByAll } = useMoviesStore();
+const { searchMovies } = useMoviesStore();
 
 const genres = ref<string[]>();
 
@@ -25,15 +26,17 @@ onBeforeMount(async () => {
       </option>
     </select>
 
-    <select v-if="queryMode === QueryMode.GENRE" v-model="queryKey" class="search-input">
+    <select v-if="queryMode === QueryMode.GENRE" v-model="queryKey" class="search-input" @keydown.prevent.enter="searchMovies">
       <option disabled hidden value="">Select genre...</option>
       <option v-for="genre in genres" :key="genre" :value="genre">
         {{ genre }}
       </option>
     </select>
-    <input v-else v-model="queryKey" @keydown.enter="getMoviesByAll" placeholder="Search..." class="search-input" />
+    <input v-else v-model="queryKey" @keydown.enter="searchMovies" placeholder="Search..." class="search-input" />
 
-    <button @click="getMoviesByAll" class="search-button">Search</button>
+    <button @click="searchMovies" class="search-button">
+      <SearchIcon width="25" height="25" />
+    </button>
   </section>
 </template>
 
@@ -57,8 +60,10 @@ onBeforeMount(async () => {
 }
 
 .mode-dropdown {
-  border-top-left-radius: 1rem;
-  border-bottom-left-radius: 1rem;
+  cursor: pointer;
+  border-top-left-radius: 0.5rem;
+  border-bottom-left-radius: 0.5rem;
+  border-right: 1px solid grey;
 }
 
 .search-input {
@@ -67,7 +72,12 @@ onBeforeMount(async () => {
 }
 
 .search-button {
-  border-top-right-radius: 1rem;
-  border-bottom-right-radius: 1rem;
+  cursor: pointer;
+  border-top-right-radius: 0.5rem;
+  border-bottom-right-radius: 0.5rem;
+  background-color: var(--color-snow-white);
+  border-left: 1px solid grey;
+  display: grid;
+  align-items: center;
 }
 </style>
