@@ -1,13 +1,15 @@
 <script setup lang="ts">
 import useGraphqlData from '@/composables/useGraphqlData';
 import { useMoviesStore } from '@/stores/movies';
+import { usePaginationStore } from '@/stores/pagination';
 import { useQueryStore } from '@/stores/query';
 import { QueryMode, QueryModeValues } from '@/types/query';
 import { storeToRefs } from 'pinia';
-import { onBeforeMount, ref } from 'vue';
+import { onBeforeMount, ref, watch } from 'vue';
 import SearchIcon from './icons/SearchIcon.vue';
 
 const { queryMode, queryKey } = storeToRefs(useQueryStore());
+const { currentPage } = storeToRefs(usePaginationStore());
 const { searchMovies } = useMoviesStore();
 
 const genres = ref<string[]>();
@@ -16,6 +18,15 @@ onBeforeMount(async () => {
   const response = await useGraphqlData<{ genres: string[] }>('query { genres }');
   genres.value = response.genres;
 });
+
+watch(queryMode, () => {
+  queryKey.value = '';
+});
+
+function handleSearch() {
+  currentPage.value = 1;
+  searchMovies();
+}
 </script>
 
 <template>
@@ -26,15 +37,15 @@ onBeforeMount(async () => {
       </option>
     </select>
 
-    <select v-if="queryMode === QueryMode.GENRE" v-model="queryKey" class="search-input" @keydown.prevent.enter="searchMovies">
+    <select v-if="queryMode === QueryMode.GENRE" v-model="queryKey" class="search-input" @keydown.prevent.enter="handleSearch">
       <option disabled hidden value="">Select genre...</option>
       <option v-for="genre in genres" :key="genre" :value="genre">
         {{ genre }}
       </option>
     </select>
-    <input v-else v-model="queryKey" @keydown.enter="searchMovies" placeholder="Search..." class="search-input" />
+    <input v-else v-model="queryKey" @keydown.enter="handleSearch" placeholder="Search..." class="search-input" />
 
-    <button @click="searchMovies" class="search-button">
+    <button @click="handleSearch" class="search-button" :disabled="!queryKey">
       <SearchIcon width="25" height="25" />
     </button>
   </section>
@@ -79,5 +90,10 @@ onBeforeMount(async () => {
   border-left: 1px solid grey;
   display: grid;
   align-items: center;
+}
+
+.search-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.7;
 }
 </style>
