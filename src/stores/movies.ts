@@ -55,7 +55,7 @@ export const useMoviesStore = defineStore('movies', () => {
 
   async function getMoviesByGenre() {
     const searchQuery = `query {
-      getMoviesByGenre (genre: "${queryKey.value}", currentPage: ${currentPage}, order: ${order}) {
+      getMoviesByGenre (genre: "${queryKey.value}", currentPage: ${currentPage.value}, order: ${order.value}) {
         ${queryData}
       }
     }`;
@@ -66,7 +66,7 @@ export const useMoviesStore = defineStore('movies', () => {
 
   async function getMoviesByTitle() {
     const searchQuery = `query {
-      getMoviesByTitle (title: "${queryKey.value}", currentPage: ${currentPage}, order: ${order}) {
+      getMoviesByTitle (title: "${queryKey.value}", currentPage: ${currentPage.value}, order: ${order.value}) {
         ${queryData}
       }
     }`;
@@ -76,7 +76,7 @@ export const useMoviesStore = defineStore('movies', () => {
 
   async function getMoviesByActor() {
     const searchQuery = `query {
-      getMoviesByActors (actor: "${queryKey.value}", currentPage: ${currentPage}, order: ${order}) {
+      getMoviesByActors (actor: "${queryKey.value}", currentPage: ${currentPage.value}, order: ${order.value}) {
         ${queryData}
       }
     }`;
