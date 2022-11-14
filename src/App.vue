@@ -1,92 +1,60 @@
 <script setup lang="ts">
-import { RouterLink, RouterView } from 'vue-router';
-import HelloWorld from './components/HelloWorld.vue';
+import { storeToRefs } from 'pinia';
 import SearchBar from './components/SearchBar.vue';
-import WatchEye from './components/WatchEye.vue';
 import PaginationBar from './components/PaginationBar.vue';
+import MovieCard from './components/MovieCard.vue';
+import LogoComponent from './components/LogoComponent.vue';
+import { useMoviesStore } from './stores/movies';
+
+const { movies, totalPages } = storeToRefs(useMoviesStore());
 </script>
 
 <template>
-  <header>
-    <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
-    <PaginationBar />
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-
-      <nav>
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/about">About</RouterLink>
-      </nav>
-    </div>
+  <header :class="{ 'with-content': movies.length > 0 }" class="container">
+    <LogoComponent class="logo" :large="movies.length === 0" />
+    <SearchBar />
   </header>
 
-  <RouterView />
+  <main class="container">
+    <MovieCard v-for="movie in movies" :key="movie._id" :movie="movie" />
+  </main>
+
+  <footer v-if="totalPages" class="container">
+    <PaginationBar />
+  </footer>
 </template>
 
 <style scoped>
 header {
-  line-height: 1.5;
-  max-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-direction: column;
+  padding: 1rem;
+  gap: 1rem;
 }
 
-.box {
-  background-color: white;
+header.with-content {
+  flex-direction: row;
 }
 
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
+main {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
 
-nav {
-  width: 100%;
-  font-size: 12px;
-  text-align: center;
-  margin-top: 2rem;
+.container {
+  width: 90%;
+  max-width: 1024px;
+  margin: 0 auto;
 }
 
-nav a.router-link-exact-active {
-  color: var(--color-text);
+.container:first-child {
+  margin-bottom: 1rem;
 }
 
-nav a.router-link-exact-active:hover {
-  background-color: transparent;
-}
-
-nav a {
-  display: inline-block;
-  padding: 0 1rem;
-  border-left: 1px solid var(--color-border);
-}
-
-nav a:first-of-type {
-  border: 0;
-}
-
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
-
-  .logo {
-    margin: 0 2rem 0 0;
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
-
-  nav {
-    text-align: left;
-    margin-left: -1rem;
-    font-size: 1rem;
-
-    padding: 1rem 0;
-    margin-top: 1rem;
-  }
+.container:last-child {
+  margin-top: 1rem;
 }
 </style>

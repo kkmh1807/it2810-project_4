@@ -6,7 +6,7 @@ import { useMoviesStore } from './movies';
  * Setup for using pagination store.
  */
 export const usePaginationStore = defineStore('pagination', () => {
-  const { totalPages } = useMoviesStore();
+  const movieStore = useMoviesStore();
 
   const currentPage = ref(1);
   const order = ref(false);
@@ -14,7 +14,7 @@ export const usePaginationStore = defineStore('pagination', () => {
   const firstPage = () => (currentPage.value = 1);
   const prevPage = () => currentPage.value--;
   const nextPage = () => currentPage.value++;
-  const lastPage = () => (currentPage.value = totalPages || 0);
+  const lastPage = () => (currentPage.value = movieStore.totalPages);
 
   const toggleOrder = () => (order.value = !order.value);
 

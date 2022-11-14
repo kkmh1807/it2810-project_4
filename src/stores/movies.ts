@@ -1,9 +1,10 @@
-import { ref, computed, reactive } from 'vue';
+import { ref, computed, watch } from 'vue';
 import { defineStore, storeToRefs } from 'pinia';
 import { usePaginationStore } from './pagination';
 import useGraphqlData from '@/composables/useGraphqlData';
 import type { MovieResponse } from '@/types/pagination';
-import { useQueryStore } from './queryStore';
+import { useQueryStore } from './query';
+import type { QueryMode } from '@/types/query';
 
 /**
  * Query data is the same, so this is moved out in a constant.
@@ -31,67 +32,77 @@ pageInfo {
  * Setup for using movies store.
  */
 export const useMoviesStore = defineStore('movies', () => {
-  const { currentPage, order } = usePaginationStore();
-  const { queryKey } = storeToRefs(useQueryStore());
+  const { currentPage, order } = storeToRefs(usePaginationStore());
+  const { queryKey, queryMode } = storeToRefs(useQueryStore());
 
-  // const movieResponse = ref<MovieResponse>({ data: [], pageInfo: { currentPage: 1, pageSize: 1, totalPages: 0 } });
-  const state = reactive<{ response?: MovieResponse }>({ response: undefined });
+  const movieResponse = ref<MovieResponse>({ data: [], pageInfo: { currentPage: 1, pageSize: 1, totalPages: 0 } });
 
   // Computed properties gets just a part of the state - removes redundant data and prevent multiple states.
-  const movies = computed(() => state.response?.data || []);
-  const totalPages = computed(() => state.response?.pageInfo.totalPages || 0);
+  const movies = computed(() => movieResponse.value?.data || []);
+  const totalPages = computed(() => movieResponse.value?.pageInfo.totalPages || 0);
 
   // Fetch functions to database.
   async function getMoviesByAll() {
     const query = `query {
-      getMoviesByAll (query: "${queryKey.value}", currentPage: ${currentPage}, order: ${order}) {
+      getMoviesByAll (query: "${queryKey.value}", currentPage: ${currentPage.value}, order: ${order.value}) {
         ${queryData}
       }
     }`;
 
     const response = await useGraphqlData<{ getMoviesByAll: MovieResponse }>(query);
-    state.response = response.getMoviesByAll;
+    movieResponse.value = response.getMoviesByAll;
   }
 
   async function getMoviesByGenre() {
     const searchQuery = `query {
-      getMoviesByGenre (genre: "${queryKey.value}", currentPage: ${currentPage}, order: ${order}) {
+      getMoviesByGenre (genre: "${queryKey.value}", currentPage: ${currentPage.value}, order: ${order.value}) {
         ${queryData}
       }
     }`;
 
     const response = await useGraphqlData<{ getMoviesByGenre: MovieResponse }>(searchQuery);
-    state.response = response.getMoviesByGenre;
+    movieResponse.value = response.getMoviesByGenre;
   }
 
   async function getMoviesByTitle() {
     const searchQuery = `query {
-      getMoviesByTitle (title: "${queryKey.value}", currentPage: ${currentPage}, order: ${order}) {
+      getMoviesByTitle (title: "${queryKey.value}", currentPage: ${currentPage.value}, order: ${order.value}) {
         ${queryData}
       }
     }`;
     const response = await useGraphqlData<{ getMoviesByTitle: MovieResponse }>(searchQuery);
-    state.response = response.getMoviesByTitle;
+    movieResponse.value = response.getMoviesByTitle;
   }
 
   async function getMoviesByActor() {
     const searchQuery = `query {
-      getMoviesByActors (actor: "${queryKey.value}", currentPage: ${currentPage}, order: ${order}) {
+      getMoviesByActors (actor: "${queryKey.value}", currentPage: ${currentPage.value}, order: ${order.value}) {
         ${queryData}
       }
     }`;
 
     const response = await useGraphqlData<{ getMoviesByActors: MovieResponse }>(searchQuery);
-    state.response = response.getMoviesByActors;
+    movieResponse.value = response.getMoviesByActors;
   }
 
+  const searchMap: Record<QueryMode, () => Promise<void>> = {
+    ALL: getMoviesByAll,
+    TITLE: getMoviesByTitle,
+    GENRE: getMoviesByGenre,
+    ACTOR: getMoviesByActor
+  };
+
+  async function searchMovies() {
+    if (!queryKey.value) return;
+
+    await searchMap[queryMode.value]();
+  }
+
+  watch(currentPage, searchMovies);
+
   return {
-    state,
     movies,
     totalPages,
-    getMoviesByAll,
-    getMoviesByTitle,
-    getMoviesByGenre,
-    getMoviesByActor
+    searchMovies
   };
 });

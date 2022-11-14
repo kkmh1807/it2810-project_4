@@ -6,12 +6,18 @@ defineProps<{
   watched: boolean;
   movieId?: string;
 }>();
+
 // TODO: Handle logic when movieCard is merged.
+function setWatched() {
+  console.log('toggle watched');
+}
 </script>
 
 <template>
-  <EyeUnwatched class="eye" v-if="!watched" tabIndex="0" />
-  <EyeWatched class="eye" v-else tabIndex="0" />
+  <div role="button" class="eye" tabindex="0" @click.stop="setWatched" @keydown.space.prevent.stop="setWatched" @keydown.enter.stop="setWatched">
+    <EyeWatched v-if="watched" />
+    <EyeUnwatched v-else />
+  </div>
 </template>
 
 <style scoped>

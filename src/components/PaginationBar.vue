@@ -1,20 +1,33 @@
 <script setup lang="ts">
 import { useMoviesStore } from '@/stores/movies';
+import { storeToRefs } from 'pinia';
+import { usePaginationStore } from '@/stores/pagination';
 import ChevronLeft from './icons/ChevronLeft.vue';
 import ChevronRight from './icons/ChevronRight.vue';
 import DoubleArrowLeft from './icons/DoubleArrowLeft.vue';
 import DoubleArrowRight from './icons/DoubleArrowRight.vue';
 
-const { totalPages } = useMoviesStore();
+const { totalPages } = storeToRefs(useMoviesStore());
+const paginationStore = usePaginationStore();
+const { currentPage } = storeToRefs(paginationStore);
+const { firstPage, prevPage, nextPage, lastPage } = paginationStore;
 </script>
 
 <template>
   <div class="pagination-container">
-    <DoubleArrowLeft class="pagination-button" />
-    <ChevronLeft class="pagination-button" />
-    <div data-cy="current-page" class="pagination-text">1 of {{ totalPages }}</div>
-    <ChevronRight class="pagination-button" />
-    <DoubleArrowRight class="pagination-button" />
+    <button class="pagination-button" @click="firstPage" :disabled="currentPage === 1">
+      <DoubleArrowLeft />
+    </button>
+    <button class="pagination-button" @click="prevPage" :disabled="currentPage === 1">
+      <ChevronLeft />
+    </button>
+    <div data-cy="current-page" class="pagination-text">{{ currentPage }} of {{ totalPages }}</div>
+    <button class="pagination-button" @click="nextPage" :disabled="currentPage === totalPages">
+      <ChevronRight />
+    </button>
+    <button class="pagination-button" @click="lastPage" :disabled="currentPage === totalPages">
+      <DoubleArrowRight />
+    </button>
   </div>
 </template>
 
@@ -34,6 +47,11 @@ const { totalPages } = useMoviesStore();
   border-radius: 15px;
   border: none;
   cursor: pointer;
+}
+
+.pagination-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.7;
 }
 
 .pagination-text {
