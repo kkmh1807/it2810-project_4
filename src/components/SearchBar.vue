@@ -37,13 +37,19 @@ function handleSearch() {
       </option>
     </select>
 
-    <select v-if="queryMode === QueryMode.GENRE" v-model="queryKey" class="search-input" @keydown.prevent.enter="handleSearch">
+    <select
+      v-if="queryMode === QueryMode.GENRE"
+      v-model="queryKey"
+      :class="{ invalid: !queryKey }"
+      class="search-input"
+      @keydown.prevent.enter="handleSearch"
+    >
       <option disabled hidden value="">Select genre...</option>
       <option v-for="genre in genres" :key="genre" :value="genre">
         {{ genre }}
       </option>
     </select>
-    <input v-else v-model="queryKey" @keydown.enter="handleSearch" placeholder="Search..." class="search-input" />
+    <input v-else v-model="queryKey" :class="{ invalid: !queryKey }" class="search-input" placeholder="Search..." @keydown.enter="handleSearch" />
 
     <button @click="handleSearch" class="search-button" :disabled="!queryKey">
       <SearchIcon width="25" height="25" />
@@ -80,6 +86,11 @@ function handleSearch() {
 .search-input {
   min-width: 250px;
   flex-grow: 1;
+  z-index: 2;
+}
+
+.search-input.invalid:focus {
+  outline: 2px solid red;
 }
 
 .search-button {
