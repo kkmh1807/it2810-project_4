@@ -18,8 +18,8 @@ const { toggleOrder } = paginationStore;
     <div class="sorting-group" tabindex="0" @click="toggleOrder">
       <p v-if="order">Ascending</p>
       <p v-else>Descending</p>
-      <SortingArrowDesc v-if="order" class="sorting-icon" width="30" />
-      <SortingArrowAsc v-else class="sorting-icon" width="30" />
+      <SortingArrowDesc v-if="order" class="sorting-icon" width="24" />
+      <SortingArrowAsc v-else class="sorting-icon" width="24" />
     </div>
   </div>
 </template>
@@ -31,7 +31,6 @@ const { toggleOrder } = paginationStore;
   flex-direction: row;
   align-items: center;
   justify-content: flex-end;
-  cursor: pointer;
   gap: 10px;
 }
 
@@ -44,5 +43,6 @@ const { toggleOrder } = paginationStore;
   display: flex;
   flex-direction: row;
   align-items: center;
+  cursor: pointer;
 }
 </style>
