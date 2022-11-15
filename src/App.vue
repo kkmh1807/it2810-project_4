@@ -17,7 +17,7 @@ const { movies, totalPages } = storeToRefs(useMoviesStore());
   </header>
 
   <main class="container">
-    <SortingParams :class="{ 'show-sorting': movies.length === 0 }" />
+    <SortingParams :class="{ 'hide-sorting': movies.length === 0 }" />
     <MovieCard v-for="movie in movies" :key="movie._id" :movie="movie" />
   </main>
 
@@ -60,7 +60,7 @@ main {
   margin-top: 1rem;
 }
 
-.show-sorting {
+.hide-sorting {
   display: none;
 }
 </style>
