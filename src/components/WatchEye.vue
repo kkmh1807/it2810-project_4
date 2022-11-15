@@ -20,8 +20,8 @@ async function setWatched() {
 
 <template>
   <div role="button" class="eye" tabindex="0" @click.stop="setWatched" @keydown.space.prevent.stop="setWatched" @keydown.enter.stop="setWatched">
-    <EyeWatched v-if="watched" />
-    <EyeUnwatched v-else />
+    <EyeWatched v-if="watched" data-cy="eye-watched" />
+    <EyeUnwatched v-else data-cy="eye-unwatched" />
   </div>
 </template>
 

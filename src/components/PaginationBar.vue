@@ -15,17 +15,17 @@ const { firstPage, prevPage, nextPage, lastPage } = paginationStore;
 
 <template>
   <div class="pagination-container">
-    <button class="pagination-button" @click="firstPage" :disabled="currentPage === 1">
+    <button class="pagination-button" @click="firstPage" :disabled="currentPage === 1" data-cy="first-page">
       <DoubleArrowLeft />
     </button>
-    <button class="pagination-button" @click="prevPage" :disabled="currentPage === 1">
+    <button class="pagination-button" @click="prevPage" :disabled="currentPage === 1" data-cy="prev-page">
       <ChevronLeft />
     </button>
     <div data-cy="current-page" class="pagination-text">{{ currentPage }} of {{ totalPages }}</div>
-    <button class="pagination-button" @click="nextPage" :disabled="currentPage === totalPages">
+    <button class="pagination-button" @click="nextPage" :disabled="currentPage === totalPages" data-cy="next-page">
       <ChevronRight />
     </button>
-    <button class="pagination-button" @click="lastPage" :disabled="currentPage === totalPages">
+    <button class="pagination-button" @click="lastPage" :disabled="currentPage === totalPages" data-cy="last-page">
       <DoubleArrowRight />
     </button>
   </div>
