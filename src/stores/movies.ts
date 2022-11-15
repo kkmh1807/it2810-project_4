@@ -99,6 +99,7 @@ export const useMoviesStore = defineStore('movies', () => {
   }
 
   watch(currentPage, searchMovies);
+  watch(order, searchMovies);
 
   return {
     movies,

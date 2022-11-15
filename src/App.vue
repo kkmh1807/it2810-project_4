@@ -5,6 +5,7 @@ import PaginationBar from './components/PaginationBar.vue';
 import MovieCard from './components/MovieCard.vue';
 import LogoComponent from './components/LogoComponent.vue';
 import { useMoviesStore } from './stores/movies';
+import SortingParams from './components/SortingParams.vue';
 
 const { movies, totalPages } = storeToRefs(useMoviesStore());
 </script>
@@ -16,6 +17,7 @@ const { movies, totalPages } = storeToRefs(useMoviesStore());
   </header>
 
   <main class="container">
+    <SortingParams :class="{ 'hide-sorting': movies.length === 0 }" />
     <MovieCard v-for="movie in movies" :key="movie._id" :movie="movie" />
   </main>
 
@@ -56,5 +58,9 @@ main {
 
 .container:last-child {
   margin-top: 1rem;
+}
+
+.hide-sorting {
+  display: none;
 }
 </style>
