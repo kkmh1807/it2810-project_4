@@ -57,6 +57,8 @@ const showDetails = ref(false);
   grid-template-columns: auto 1.5fr 1.5fr 0.5fr 85px;
   align-items: center;
   cursor: pointer;
+  border-radius: 0.5rem;
+  overflow: hidden;
 }
 
 h3 {

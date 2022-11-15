@@ -35,10 +35,10 @@ export const useMoviesStore = defineStore('movies', () => {
   const { currentPage, order } = storeToRefs(usePaginationStore());
   const { queryKey, queryMode } = storeToRefs(useQueryStore());
 
-  const movieResponse = ref<MovieResponse>({ data: [], pageInfo: { currentPage: 1, pageSize: 1, totalPages: 0 } });
+  const movieResponse = ref<MovieResponse>();
 
   // Computed properties gets just a part of the state - removes redundant data and prevent multiple states.
-  const movies = computed(() => movieResponse.value?.data || []);
+  const movies = computed(() => movieResponse.value?.data);
   const totalPages = computed(() => movieResponse.value?.pageInfo.totalPages || 0);
 
   // Fetch functions to database.

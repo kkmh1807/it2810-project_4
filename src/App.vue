@@ -11,18 +11,19 @@ const { movies, totalPages } = storeToRefs(useMoviesStore());
 </script>
 
 <template>
-  <header :class="{ 'with-content': movies.length > 0 }" class="container">
-    <LogoComponent class="logo" :large="movies.length === 0" />
+  <header :class="{ 'with-content': movies && movies.length > 0 }" class="container">
+    <LogoComponent class="logo" :large="!(movies && movies.length > 0)" />
     <SearchBar />
   </header>
 
   <main class="container">
-    <SortingParams :class="{ 'hide-sorting': movies.length === 0 }" />
+    <SortingParams :class="{ 'hide-sorting': !(movies && movies.length > 0) }" />
     <MovieCard v-for="movie in movies" :key="movie._id" :movie="movie" />
   </main>
 
-  <footer v-if="totalPages" class="container">
-    <PaginationBar />
+  <footer class="container">
+    <PaginationBar v-if="totalPages" />
+    <div v-if="movies?.length === 0" class="no-content">We could not find any movies matching your search</div>
   </footer>
 </template>
 
@@ -62,5 +63,10 @@ main {
 
 .hide-sorting {
   display: none;
+}
+
+.no-content {
+  text-align: center;
+  font-size: 1.2rem;
 }
 </style>
