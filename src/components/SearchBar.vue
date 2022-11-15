@@ -49,7 +49,14 @@ function handleSearch() {
         {{ genre }}
       </option>
     </select>
-    <input v-else v-model="queryKey" :class="{ invalid: !queryKey }" class="search-input" placeholder="Search..." @keydown.enter="handleSearch" />
+    <input
+      v-else
+      v-model="queryKey"
+      :class="{ invalid: !queryKey }"
+      class="search-input"
+      placeholder="Search for movies..."
+      @keydown.enter="handleSearch"
+    />
 
     <button @click="handleSearch" class="search-button" :disabled="!queryKey">
       <SearchIcon width="25" height="25" />
