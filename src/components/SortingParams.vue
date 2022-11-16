@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { usePaginationStore } from '@/stores/pagination';
 import { storeToRefs } from 'pinia';
-import SortingArrowDesc from './icons/SortingArrowDesc.vue';
 import SortingArrowAsc from './icons/SortingArrowAsc.vue';
+import SortingArrowDesc from './icons/SortingArrowDesc.vue';
 
 const paginationStore = usePaginationStore();
 const { order } = storeToRefs(paginationStore);
@@ -16,10 +16,14 @@ const { toggleOrder } = paginationStore;
       <option>Rating</option>
     </select>
     <div class="sorting-group" tabindex="0" @click="toggleOrder">
-      <p v-if="order">Ascending</p>
-      <p v-else>Descending</p>
-      <SortingArrowDesc v-if="order" class="sorting-icon" width="24" />
-      <SortingArrowAsc v-else class="sorting-icon" width="24" />
+      <template v-if="order">
+        <p>Ascending</p>
+        <SortingArrowAsc data-cy="asc-arrow" class="sorting-icon" width="24" />
+      </template>
+      <template v-else>
+        <p>Descending</p>
+        <SortingArrowDesc data-cy="desc-arrow" class="sorting-icon" width="24" />
+      </template>
     </div>
   </div>
 </template>

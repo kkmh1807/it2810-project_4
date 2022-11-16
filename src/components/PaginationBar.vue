@@ -21,7 +21,7 @@ const { firstPage, prevPage, nextPage, lastPage } = paginationStore;
     <button class="pagination-button" @click="prevPage" :disabled="currentPage === 1" data-cy="prev-page">
       <ChevronLeft />
     </button>
-    <div data-cy="current-page" class="pagination-text">{{ currentPage }} of {{ totalPages }}</div>
+    <div class="pagination-text">{{ currentPage }} of {{ totalPages }}</div>
     <button class="pagination-button" @click="nextPage" :disabled="currentPage === totalPages" data-cy="next-page">
       <ChevronRight />
     </button>

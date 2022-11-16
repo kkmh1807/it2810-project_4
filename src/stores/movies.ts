@@ -104,6 +104,7 @@ export const useMoviesStore = defineStore('movies', () => {
   return {
     movies,
     totalPages,
-    searchMovies
+    searchMovies,
+    movieResponse
   };
 });
